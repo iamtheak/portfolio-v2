@@ -39,11 +39,10 @@ export const INTRO_LINES = [
   "SCROLL, FIGHT BOSSES, TAKE MY HEARTS. READY?",
 ];
 
-/* TODO: replace with your real links */
 export const LINKS = {
-  email: "hello@adarshakarki.dev",
-  github: "https://github.com/",
-  linkedin: "https://www.linkedin.com/",
+  email: "karki.adarsha2005@gmail.com",
+  github: "https://github.com/iamtheak",
+  linkedin: "https://www.linkedin.com/in/adarsha-karki-45b92b25a/",
 };
 
 export interface Move {
