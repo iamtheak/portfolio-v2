@@ -1,0 +1,108 @@
+.space {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 45%, #151c36 0%, #060812 65%);
+}
+
+.space > :not(.stars) {
+  position: relative;
+  z-index: 1;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.stars span {
+  position: absolute;
+  background: #dbe6ff;
+}
+
+.stage {
+  --cube-size: clamp(190px, 34vw, 360px);
+  display: grid;
+  place-items: center;
+  min-height: calc(100svh - 18rem);
+  padding: calc(var(--cube-size) * 0.4) 0;
+  perspective: calc(var(--cube-size) * 5);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.stage[data-dragging] {
+  cursor: grabbing;
+}
+
+.orbit {
+  width: var(--cube-size);
+  height: var(--cube-size);
+  transform-style: preserve-3d;
+  animation: orbit 24s ease-in-out infinite;
+}
+
+.stage[data-dragging] .orbit,
+.stage:has(:focus-visible) .orbit {
+  animation-play-state: paused;
+}
+
+@keyframes orbit {
+  0%, 100% { transform: rotateX(0deg) rotateY(-7deg); }
+  25% { transform: rotateX(4deg) rotateY(0deg); }
+  50% { transform: rotateX(0deg) rotateY(7deg); }
+  75% { transform: rotateX(-4deg) rotateY(0deg); }
+}
+
+.cube {
+  position: relative;
+  width: var(--cube-size);
+  height: var(--cube-size);
+  transform-style: preserve-3d;
+  transform: rotateX(-30deg) rotateY(-40deg);
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stage[data-dragging] .cube {
+  transition: none;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  text-align: left;
+  cursor: inherit;
+  border: 3px solid currentColor;
+  background: var(--color-abyss);
+  backface-visibility: hidden;
+}
+
+.front {
+  color: var(--color-neon);
+  transform: translateZ(calc(var(--cube-size) / 2));
+}
+
+.right {
+  color: var(--color-blue);
+  transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2));
+}
+
+.top {
+  color: var(--color-pink);
+  transform: rotateX(90deg) translateZ(calc(var(--cube-size) / 2));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit {
+    animation: none;
+  }
+
+  .cube {
+    transition: none;
+  }
+}

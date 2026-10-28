@@ -2,6 +2,32 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Contact persistence
+
+Set `DATABASE_URL` in `.env` locally and in the deployment's server environment
+to the existing PostgreSQL connection URL. Never prefix it with `NEXT_PUBLIC_`.
+Restart the development server after changing it. The contact form posts
+`name`, `email`, and `message` to `/api/contact`; success is returned only after
+inserting into `public.contacts`, including `created_at = CURRENT_TIMESTAMP`.
+The existing table already has these columns, so no migration is required.
+
+Requests are limited to 20,000 bytes while streaming. Contact saves are limited
+to three per email address (case insensitive) and 30 total in ten minutes.
+The check and insert share a PostgreSQL transaction and advisory lock, so the
+limit is shared across server instances. Limited requests receive `429` and a
+`Retry-After: 600` header. This uses the existing table; no extra environment
+variables or migrations are needed. Deploy behind an upstream request/connection
+limit as well to protect the server from traffic that never reaches a valid save.
+
+The only added dependency is `postgres`, the database driver; there was no
+database library in this checkout. Install with `pnpm install`.
+
+Run `npm run test:contact` with Node 24+ for validation and persistence-boundary
+checks. To also test an actual insert and read against the configured database,
+run `node --env-file=.env --test tests/contact.test.mjs`. The database test uses
+a transaction and rolls it back, leaving no contact row (the sequence may advance).
+The database test is skipped when `DATABASE_URL` is absent.
+
 First, run the development server:
 
 ```bash
